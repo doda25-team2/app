@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,20 +24,20 @@ public class FrontendController {
 
     private RestTemplateBuilder rest;
 
-    public FrontendController(RestTemplateBuilder rest, Environment env) {
+    public FrontendController(RestTemplateBuilder rest, @Value("${model.service.url}") String modelServiceUrl) {
         this.rest = rest;
-        this.modelHost = env.getProperty("MODEL_HOST");
+        this.modelHost = modelServiceUrl;
         assertModelHost();
     }
 
     private void assertModelHost() {
         if (modelHost == null || modelHost.strip().isEmpty()) {
-            System.err.println("ERROR: ENV variable MODEL_HOST is null or empty");
+            System.err.println("ERROR: property model.service.url (or env MODEL_SERVICE_URL) is null or empty");
             System.exit(1);
         }
         modelHost = modelHost.strip();
         if (modelHost.indexOf("://") == -1) {
-            var m = "ERROR: ENV variable MODEL_HOST is missing protocol, like \"http://...\" (was: \"%s\")\n";
+            var m = "ERROR: property model.service.url (or env MODEL_SERVICE_URL) is missing protocol, like \"http://...\" (was: \"%s\")\n";
             System.err.printf(m, modelHost);
             System.exit(1);
         } else {

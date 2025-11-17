@@ -12,8 +12,12 @@ WORKDIR /app
 
 COPY --from=build /workspace/target/*.jar app.jar
 
+
+# metadata: the container listens on 8080 by default
 EXPOSE 8080
 
-ENV MODEL_HOST=http://host.docker.internal:8081
+# default environment values (can be overridden by docker run / compose)
+ENV APP_PORT=8080
+ENV MODEL_SERVICE_URL=http://model-service:8081
 
 ENTRYPOINT ["java","-jar","app.jar"]
