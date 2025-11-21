@@ -34,3 +34,5 @@ buildNumber.properties
 
 # Logs
 *.log
+
+maven-settings.xml
