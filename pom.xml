@@ -32,7 +32,21 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>nl.tudelft.doda25.team2</groupId>
+			<artifactId>lib-version</artifactId>
+			<version>1.0.4</version>
+		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>github</id>
+			<name>GitHub doda25-team2 Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/doda25-team2/lib-version</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>

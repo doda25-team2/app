@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      secrets:
+        - maven-settings
+    ports:
+      - "8080:8080"
+
+secrets:
+  maven-settings:
+    file: ./maven-settings.xml

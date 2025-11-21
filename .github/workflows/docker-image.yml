@@ -39,6 +39,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Prepare Maven settings.xml
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp maven-settings.xml.example maven-settings.xml
+          sed -i "s/GITHUB_USERNAME/${GITHUB_USERNAME}/g" maven-settings.xml
+          sed -i "s/GITHUB_TOKEN/${GITHUB_TOKEN}/g" maven-settings.xml
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -59,6 +68,8 @@ jobs:
           push: true                      
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          secrets: |
+            maven-settings=./maven-settings.xml
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3

@@ -5,7 +5,10 @@ WORKDIR /workspace
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn -B -DskipTests package
+# The settings.xml required to access the GitHub Package registry
+# is mounted as a build secret
+RUN --mount=type=secret,id=maven-settings,target=/root/.m2/settings.xml \
+    mvn --settings /root/.m2/settings.xml -B -DskipTests package
 
 FROM eclipse-temurin:25-jre-jammy
 WORKDIR /app
