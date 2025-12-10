@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import frontend.data.Sms;
+import frontend.metrics.AppMetrics;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -21,12 +22,15 @@ import jakarta.servlet.http.HttpServletRequest;
 public class FrontendController {
 
     private String modelHost;
-
     private RestTemplateBuilder rest;
+    private final AppMetrics metrics;
 
-    public FrontendController(RestTemplateBuilder rest, @Value("${model.service.url}") String modelServiceUrl) {
+    public FrontendController(RestTemplateBuilder rest,
+                              @Value("${model.service.url}") String modelServiceUrl,
+                              AppMetrics metrics) {
         this.rest = rest;
         this.modelHost = modelServiceUrl;
+        this.metrics = metrics;
         assertModelHost();
     }
 
@@ -60,9 +64,19 @@ public class FrontendController {
     @PostMapping({ "", "/" })
     @ResponseBody
     public Sms predict(@RequestBody Sms sms) {
+        long startTime = System.currentTimeMillis();
+
         System.out.printf("Requesting prediction for \"%s\" ...\n", sms.sms);
+
+        // Get prediction
         sms.result = getPrediction(sms);
         System.out.printf("Prediction: %s\n", sms.result);
+
+        // Record metrics
+        int messageLength = sms.sms != null ? sms.sms.length() : 0;
+        long duration = System.currentTimeMillis() - startTime;
+        metrics.recordClassification(sms.result, messageLength, duration);
+
         return sms;
     }
 
