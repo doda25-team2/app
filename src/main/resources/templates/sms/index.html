@@ -1,6 +1,7 @@
 <html>
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SMS Checker</title>
 <link rel="stylesheet" th:href="@{/sms/format.css}" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -8,21 +9,29 @@
 </head>
 <body>
 <span id="hostname" th:text="${hostname}"></span>
-<h1>SMS Checker</h1>
 
-<form>
+<div class="container">
+	<h1>SMS Spam Checker</h1>
 
-<textarea>Example SMS ...</textarea><br />
+	<form>
+		<textarea placeholder="Enter your SMS message here..."></textarea>
 
-<div class="radio">
-	<input type="radio" name="guess" value="ham" checked="checked" /> Ham<br />
-	<input type="radio" name="guess" value="spam" /> Spam<br />
+		<div class="radio">
+			<label>
+				<input type="radio" name="guess" value="ham" checked="checked" />
+				Ham (legitimate)
+			</label>
+			<label>
+				<input type="radio" name="guess" value="spam" />
+				Spam
+			</label>
+		</div>
+
+		<button type="submit">Check</button>
+	</form>
+
+	<div id="result"></div>
 </div>
-
-<button>Send</button>
-</form>
-
-<p id="result"></p>
 
 </body>
 </html>
