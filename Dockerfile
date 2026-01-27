@@ -23,4 +23,4 @@ EXPOSE 8080
 ENV APP_PORT=8080
 ENV MODEL_SERVICE_URL=http://model-service:8081
 
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar /app/app.jar --server.port=${APP_PORT}"]
